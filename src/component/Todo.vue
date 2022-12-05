@@ -4,35 +4,53 @@
 export default {
     data() {
         return {
-            tasks: [],
+            tasks: 
+                {
+                    todo:"",
+                    staus: false
+                }
+            ,
             text: "enter tasks to be completed.....",
             inputValue: "",
-            detail: []
+            detail: [],
+            buttonStyle: {
+                color: "white",
+                fontWeight: "bolder",
+                backgroundColor: "tomato",
+            },
+         
+
         }
     },
     methods: {
         addTask() {
-            this.tasks.push(this.inputValue)
+            this.tasks.push({todo:this.inputValue,status:false})
             localStorage.setItem("task", JSON.stringify(this.tasks))
             this.inputValue = ""
         },
-        enter(){
-            this.tasks.push(this.inputValue)
+        enter() {
+            this.tasks.push({todo:this.inputValue,status:false})
             localStorage.setItem("task", JSON.stringify(this.tasks))
             this.inputValue = ""
         },
         removeTask(task) {
-         console.log(task)
-         this.tasks.splice(task,1)
-         localStorage.setItem("task",JSON.stringify(this.tasks))
-      
-        }
+            console.log(task)
+            this.tasks.splice(task, 1)
+            localStorage.setItem("task", JSON.stringify(this.tasks))
+
+        },
+       
+toggle(task){
+task.status = !task.status
+localStorage.setItem("task", JSON.stringify(this.tasks))
+
+}
     },
 
     mounted() {
 
         this.tasks = JSON.parse(localStorage.getItem("task")) || []
-
+       
     },
 
 }
@@ -44,12 +62,18 @@ export default {
         <div class="box">
             <h1>TODO LIST</h1>
             <input v-model="inputValue" type="text" placeholder="Enter Task" @keypress.enter="enter" />
-            <button :disabled="(inputValue.length < 5)" @click="addTask"   > Add Task </button>
+            <button :disabled="(inputValue.length < 5)" @click="addTask"> Add Task </button>
             <ol>
-                <li v-for="(task,index) of tasks">
+                <li v-for="(task, index) of tasks" 
+            
+                :class=" {
+                    strikeout:task.status
+                } 
+                 " class="static-class">
                     <div>
-                        {{ task }}
-                        <button @click="removeTask(index)" > Del</button>
+                        <input  type="checkbox" v-model="task.status"    @click="toggle(task)" />
+                        {{ task.todo}}
+                        <button :style="buttonStyle" @click="removeTask(index)"> Del</button>
                     </div>
 
                 </li>

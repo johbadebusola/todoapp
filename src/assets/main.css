@@ -1,2 +1,9 @@
 
 
+@import './base.css';
+
+.strikeout{
+  text-decoration: line-through;
+}
+
+
