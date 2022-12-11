@@ -1,14 +1,18 @@
-
-<script>
+<script >
+import { walkBlockDeclarations } from "@vue/compiler-core"
+import Component1 from "./Component1.vue"
 
 export default {
+    components: {
+   Component1
+  },
     data() {
         return {
-            tasks: 
-                {
-                    todo:"",
-                    staus: false
-                }
+            tasks:
+            {
+                todo: "",
+                staus: false
+            }
             ,
             text: "enter tasks to be completed.....",
             inputValue: "",
@@ -18,18 +22,25 @@ export default {
                 fontWeight: "bolder",
                 backgroundColor: "tomato",
             },
-         
+            isActive: true,
+          componentStyle:{
+            fontWeight:"900px",
+            color:"green",
+            fontSize:"1.2em"
+          }
 
         }
     },
     methods: {
+
+        
         addTask() {
-            this.tasks.push({todo:this.inputValue,status:false})
+            this.tasks.push({ todo: this.inputValue, status: false })
             localStorage.setItem("task", JSON.stringify(this.tasks))
             this.inputValue = ""
         },
         enter() {
-            this.tasks.push({todo:this.inputValue,status:false})
+            this.tasks.push({ todo: this.inputValue, status: false })
             localStorage.setItem("task", JSON.stringify(this.tasks))
             this.inputValue = ""
         },
@@ -39,18 +50,22 @@ export default {
             localStorage.setItem("task", JSON.stringify(this.tasks))
 
         },
-       
-toggle(task){
-task.status = !task.status
-localStorage.setItem("task", JSON.stringify(this.tasks))
 
-}
+        toggle(task) {
+            task.status = !task.status
+            localStorage.setItem("task", JSON.stringify(this.tasks))
+
+        },
+        complete() {
+            this.isActive = !this.isActive
+        }
+       
     },
 
     mounted() {
 
         this.tasks = JSON.parse(localStorage.getItem("task")) || []
-       
+        console.log(this.$refs.items)
     },
 
 }
@@ -64,15 +79,13 @@ localStorage.setItem("task", JSON.stringify(this.tasks))
             <input v-model="inputValue" type="text" placeholder="Enter Task" @keypress.enter="enter" />
             <button :disabled="(inputValue.length < 5)" @click="addTask"> Add Task </button>
             <ol>
-                <li v-for="(task, index) of tasks" 
-            
-                :class=" {
-                    strikeout:task.status
-                } 
-                 " class="static-class">
+                <li v-for="(task, index) of tasks" :class="{
+                    strikeout: task.status
+                }
+                " class="static-class">
                     <div>
-                        <input  type="checkbox" v-model="task.status"    @click="toggle(task)" />
-                        {{ task.todo}}
+                        <input type="checkbox" v-model="task.status" @click="toggle(task)" />
+                        {{ task.todo }}
                         <button :style="buttonStyle" @click="removeTask(index)"> Del</button>
                     </div>
 
@@ -81,8 +94,30 @@ localStorage.setItem("task", JSON.stringify(this.tasks))
 
             <h3 v-if="(tasks.length === 0)"> {{ text }} </h3>
 
+            <!-- TO VIEW COMPLETED TASK -->
+            <button @click="complete">
+                Completed
+            </button>
+            <div :class="{ active: isActive }" v-for="task of tasks">
+
+                <Component1 :style="componentStyle"
+               
+                 :itemstodo="task.todo"
+                 :itemsStatus="task.status"
+                 />
+        
+
+            </div>
         </div>
+
+    
+          
+       
+   
     </div>
+
+ 
+  
 </template>
 
 
@@ -95,6 +130,7 @@ localStorage.setItem("task", JSON.stringify(this.tasks))
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
 }
 
 .container>.box {
