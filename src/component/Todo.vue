@@ -1,5 +1,4 @@
 <script >
-import { walkBlockDeclarations } from "@vue/compiler-core"
 import Component1 from "./Component1.vue"
 
 export default {
@@ -15,7 +14,7 @@ export default {
             }
             ,
             text: "enter tasks to be completed.....",
-            inputValue: "",
+            inputValue: "", 
             detail: [],
             buttonStyle: {
                 color: "white",
@@ -25,9 +24,10 @@ export default {
             isActive: true,
           componentStyle:{
             fontWeight:"900px",
-            color:"green",
+            color:"black",
             fontSize:"1.2em"
-          }
+          },
+          isToggle: false
 
         }
     },
@@ -58,6 +58,9 @@ export default {
         },
         complete() {
             this.isActive = !this.isActive
+        },
+        toggleMode(){
+            this.isToggle = !this.isToggle
         }
        
     },
@@ -67,15 +70,16 @@ export default {
         this.tasks = JSON.parse(localStorage.getItem("task")) || []
         console.log(this.$refs.items)
     },
+    
 
 }
 </script>
 
 <template>
-    <div class="container">
-
+    <div class="container" :class="{toggleMode:isToggle}">
+<button @click="toggleMode" > {{isToggle?"Light mode": "Dark mode"}}</button>
         <div class="box">
-            <h1>TODO LIST</h1>
+            <h1 :class="{toggleH1:isToggle}" >TODO LIST</h1>
             <input v-model="inputValue" type="text" placeholder="Enter Task" @keypress.enter="enter" />
             <button :disabled="(inputValue.length < 5)" @click="addTask"> Add Task </button>
             <ol>
@@ -100,10 +104,11 @@ export default {
             </button>
             <div :class="{ active: isActive }" v-for="task of tasks">
 
-                <Component1 :style="componentStyle"
+                <Component1 
                
                  :itemstodo="task.todo"
                  :itemsStatus="task.status"
+                :isToggle="isToggle"
                  />
         
 

@@ -1,16 +1,17 @@
 <script>
 export default {
-   props: ["itemstodo","itemsStatus"],
-   inheritAttrs: false
+   props: ["itemstodo","itemsStatus","isToggle"]
+
 }
+
 </script>
 <template>
 
 <div>
  
-   <h4 v-if="(itemsStatus)">
-      <ul>
-        <li  v-bind="$attrs">
+   <h4 v-if="(itemsStatus)" :class="{toggleH1:isToggle}">
+      <ul   >
+        <li  >
             {{ itemstodo }}
         </li>
       </ul>
@@ -18,3 +19,4 @@ export default {
     
 </div>
 </template>
+

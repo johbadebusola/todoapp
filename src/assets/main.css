@@ -9,3 +9,18 @@
 .active{
   display: none;
 }
+
+
+
+.toggleMode{
+  background-color: darkslategrey;
+transition: 1s ease-in-out;
+}
+
+.toggleH1{
+  color: white;
+}
+
+ol li::before{
+  color: white;
+}
